@@ -1,4 +1,4 @@
-# CRM MVP (Next.js 14 + Prisma + SQLite)
+# CRM MVP (Next.js 14 + Prisma + postgreSQL)
 
 A minimal, working CRM scaffold focused on **Deals → Stages (Kanban) → Activities** with a simple UI and server actions.
 
@@ -11,45 +11,8 @@ A minimal, working CRM scaffold focused on **Deals → Stages (Kanban) → Activ
 
 ## Quick start
 
-1) **Install dependencies**
-```bash
-npm i
-```
-
-2) **Set up the DB**
-```bash
-cp .env.example .env
-npm run prisma:generate
-npm run db:push
-npm run seed
-```
-
-3) **Run the app**
-```bash
-npm run dev
-```
-
-Visit http://localhost:3000
-
-## Project structure
-```
-app/
-  layout.tsx
-  page.tsx          # Kanban board & create-deal form
-  actions.ts        # Server actions for create/move
-lib/
-  prisma.ts         # Prisma client singleton
-prisma/
-  schema.prisma
-  seed.cjs
-```
-
-## Next steps
-- Add auth (Clerk, Auth0, or NextAuth) + orgs/roles.
-- Activities & Tasks UI (notes, calls, meetings).
-- Search & filters; saved views.
-- Audit log; soft delete.
-- Import/export CSV.
-- Email/calendar integrations (Google/Microsoft).
-
-If you want, we can extend this with Accounts/Contacts pages, activity timelines, and basic reporting.
+## Getting Started
+1) Copy `.env.example` → `.env` and set `DATABASE_URL`
+2) Install: `npm install`
+3) Prisma: `npx prisma generate && npx prisma migrate deploy`
+4) Dev: `npm run dev`
