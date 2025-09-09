@@ -6,7 +6,7 @@ A minimal, working CRM scaffold focused on **Deals → Stages (Kanban) → Activ
 - Data model: Pipeline → Stages → Deals (+ Accounts/Contacts skeletons).
 - Server-rendered Kanban board by Stage.
 - Create a deal, move deals between stages (left/right buttons).
-- SQLite via Prisma; seed script creates a default pipeline & sample data.
+- postgreSQL via NEON and Prisma; seed script creates a default pipeline & sample data.
 - No auth yet (single-tenant dev mode).
 
 ## Quick start
