@@ -1,0 +1,130 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql" // <-- using Neon
+  url       = env("DATABASE_URL") // pooled URL (-pooler)
+  directUrl = env("DIRECT_URL") // direct URL (no -pooler), for migrations
+}
+
+model Pipeline {
+  id        String   @id @default(cuid())
+  name      String
+  stages    Stage[]
+  deals     Deal[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Stage {
+  id         String   @id @default(cuid())
+  name       String
+  order      Int
+  pipeline   Pipeline @relation(fields: [pipelineId], references: [id])
+  pipelineId String
+  deals      Deal[]
+
+  // Back-relations for stage change history (do NOT duplicate these lines)
+  stageChangesFrom DealStageChange[] @relation("StageFrom")
+  stageChangesTo   DealStageChange[] @relation("StageTo")
+}
+
+model Account {
+  id        String    @id @default(cuid())
+  name      String
+  domain    String?   @unique
+  contacts  Contact[]
+  deals     Deal[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  // Soft delete
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([deletedAt])
+}
+
+model Contact {
+  id        String   @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String?  @unique
+  phone     String?
+  account   Account? @relation(fields: [accountId], references: [id])
+  accountId String?
+  deals     Deal[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Soft delete
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([deletedAt])
+}
+
+model Deal {
+  id         String     @id @default(cuid())
+  name       String
+  amount     Float?
+  stage      Stage      @relation(fields: [stageId], references: [id])
+  stageId    String
+  pipeline   Pipeline   @relation(fields: [pipelineId], references: [id])
+  pipelineId String
+  account    Account?   @relation(fields: [accountId], references: [id])
+  accountId  String?
+  contact    Contact?   @relation(fields: [contactId], references: [id])
+  contactId  String?
+  activities Activity[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  // Optional: back-relation to stage change history for this deal
+  stageChanges DealStageChange[]
+
+  // Soft delete
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([deletedAt])
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  deal      Deal     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  dealId    String
+  type      String   @default("note")
+  body      String
+  createdBy String?
+  createdAt DateTime @default(now())
+
+  // Soft delete
+  deletedAt DateTime?
+  deletedBy String?
+
+  @@index([dealId, createdAt])
+  @@index([deletedAt])
+}
+
+//
+// NEW: Stage change history
+//
+model DealStageChange {
+  id     String @id @default(cuid())
+  deal   Deal   @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  dealId String
+
+  // Named relations to Stage (from/to). These names MUST match back-relations on Stage.
+  fromStage   Stage?  @relation("StageFrom", fields: [fromStageId], references: [id])
+  fromStageId String?
+  toStage     Stage   @relation("StageTo", fields: [toStageId], references: [id])
+  toStageId   String
+
+  createdBy String?
+  createdAt DateTime @default(now())
+
+  @@index([dealId, createdAt])
+  @@index([toStageId, createdAt])
+}

@@ -1,0 +1,179 @@
+/* ========== App Shell (grid) ========== */
+.appShell {
+  --rail: 260px; /* expanded rail width */
+  display: grid;
+  grid-template-columns: var(--rail) 1fr; /* rail | content */
+  min-height: 100vh;
+  transition: grid-template-columns 120ms ease;
+}
+
+/* Collapsed: change only the variable (no explicit widths on .sidebar) */
+.appShell[data-sidebar="collapsed"] {
+  --rail: 77px; /* tidy collapsed rail */
+}
+
+/* ========== Sidebar (fills its grid column) ========== */
+.sidebar {
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* header | scrollable nav | footer */
+  gap: 12px;
+  padding: 12px;
+
+  background: var(--surface);
+  border-right: 2px solid var(--border);
+  z-index: 20; /* sits above main on scroll */
+}
+
+/* Header */
+.sidebarHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+/* Nav (middle region) — scrollable between header/footer */
+.sideNav {
+  min-height: 0; /* allow scroll area to shrink */
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overscroll-behavior: contain;
+}
+
+/* Footer pinned at bottom */
+.sidebarFooter {
+  padding-top: 8px;
+  border-top: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* ========== Main Content ========== */
+.appMain {
+  box-sizing: border-box;
+  padding: 12px; /* comfortable default padding */
+  margin: 0;
+  max-width: none; /* full-width boards/tables */
+}
+
+/* When collapsed, small gutter so content doesn't touch the rail */
+.appShell[data-sidebar="collapsed"] .appMain {
+  padding-left: 12px;
+}
+
+/* Optional: ensure first panel isn't offset if you had margins */
+.appShell[data-sidebar="collapsed"] .appMain .panel:first-child {
+  margin-left: 0;
+}
+
+/* ========== Nav Item Styles (expanded default) ========== */
+.sideNavItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  text-decoration: none;
+  color: inherit;
+  border: 2px solid var(--border);
+  background: transparent;
+  box-sizing: border-box;
+}
+
+/* Active state (high-contrast tokens) */
+.sideNavItem.is-active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--on-primary);
+}
+
+/* Icon and label */
+.sideNavItem .icon {
+  display: inline-flex;
+  width: 20px;
+  height: 20px;
+}
+.sideNavItem .icon svg {
+  width: 20px;
+  height: 20px;
+}
+.sideNavItem .label {
+  display: inline;
+}
+
+/* ========== Collapsed Sidebar Behavior ========== */
+/* Center items in the rail so they don't stretch full width */
+.appShell[data-sidebar="collapsed"] .sideNav {
+  align-items: center;
+}
+
+/* Compact icon-only buttons (no overlap with content) */
+.appShell[data-sidebar="collapsed"] .sideNavItem {
+  align-self: center; /* don't stretch to full rail width */
+  justify-content: center; /* center the icon */
+  width: 36px; /* compact square */
+  height: 36px;
+  padding: 6px; /* tight inner padding */
+  gap: 0; /* no space (label hidden) */
+  border-radius: 10px;
+  overflow: hidden; /* clip anything stray */
+}
+
+/* Hide only the text label; keep the icon visible */
+.appShell[data-sidebar="collapsed"] .sideNavItem .label {
+  display: none !important;
+}
+.appShell[data-sidebar="collapsed"] .sideNavItem .icon {
+  display: inline-flex !important;
+  width: 20px;
+  height: 20px;
+}
+.appShell[data-sidebar="collapsed"] .sideNavItem .icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Header compact when collapsed */
+.appShell[data-sidebar="collapsed"] .sidebarHeader {
+  justify-content: center;
+}
+.appShell[data-sidebar="collapsed"] .sidebarHeader strong {
+  display: none;
+}
+
+/* Footer compact + centered when collapsed */
+.appShell[data-sidebar="collapsed"] .sidebar {
+  /* ↑↑ key tweak: a touch more right padding so content isn't flush with rail edge */
+  padding: 12px 12px; /* was 12px 8px */
+}
+.appShell[data-sidebar="collapsed"] .sidebarFooter {
+  justify-content: center; /* center the switch */
+}
+.appShell[data-sidebar="collapsed"] .sideFooter .small {
+  display: none !important; /* hide 'Theme' label + light/dark text in collapsed state */
+}
+/* Scale the switch slightly smaller so it fits the 56px rail without crowding */
+.appShell[data-sidebar="collapsed"] .sidebarFooter label {
+  transform: scale(0.9);
+  transform-origin: center;
+}
+
+/* ========== Responsive ========== */
+/* Auto-collapse rail on narrow screens using the same variable-driven layout */
+@media (max-width: 980px) {
+  .appShell {
+    --rail: 56px;
+  }
+  .appMain {
+    padding-left: 12px;
+  }
+}

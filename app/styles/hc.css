@@ -1,0 +1,182 @@
+/* High-Contrast Theme for CRM MVP
+   - Uses CSS variables with two modes: hc-light and hc-dark
+   - Drop this file in and import it from app/layout.tsx (or globals.css)
+   - Targets common classes used in this app: .panel, .card, .primary, .row, .column, .small
+*/
+
+/* ---------- Base (fallback/default) ---------- */
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --muted: #404040;         /* secondary text */
+  --border: #1f2937;        /* strong border (slate-800) */
+  --surface: #f6f8fb;       /* light surface for panels */
+  --card: #ffffff;          /* card background */
+  --link: #0044cc;          /* strong blue links */
+  --link-visited: #5a2ca0;
+
+  --primary: #0049d8;       /* deep blue */
+  --on-primary: #ffffff;
+
+  --accent: #b10b60;        /* magenta accent */
+  --on-accent: #ffffff;
+
+  --success: #0b6b0b;
+  --on-success: #ffffff;
+
+  --warning: #935200;
+  --on-warning: #ffffff;
+
+  --danger: #a00017;
+  --on-danger: #ffffff;
+
+  --focus: #ffb302;         /* amber focus ring */
+
+  --radius: 14px;
+  --shadow: 0 1px 0 rgba(0,0,0,.08), 0 6px 20px rgba(0,0,0,.08);
+  --shadow-strong: 0 1px 0 rgba(0,0,0,.10), 0 10px 28px rgba(0,0,0,.12);
+}
+
+/* ---------- High-contrast Light ---------- */
+:root[data-theme="hc-light"] {
+  --bg: #ffffff;
+  --text: #0e0e0e;
+  --muted: #282828;
+  --border: #0f172a;
+  --surface: #f3f4f6;
+  --card: #ffffff;
+  --link: #0b5cff;
+  --link-visited: #5a2ca0;
+  --primary: #0041c4;
+  --on-primary: #ffffff;
+  --accent: #a30e55;
+  --on-accent: #ffffff;
+  --focus: #ffb302;
+}
+
+/* ---------- High-contrast Dark ---------- */
+:root[data-theme="hc-dark"] {
+  --bg: #0b0b0c;
+  --text: #f7f7f8;
+  --muted: #d0d0d4;
+  --border: #e4e4e7;
+  --surface: #141416;
+  --card: #0f0f11;
+  --link: #8bb4ff;
+  --link-visited: #c2a6ff;
+  --primary: #5fa1ff;
+  --on-primary: #0b0b0c;
+  --accent: #ff79b0;
+  --on-accent: #0b0b0c;
+  --focus: #ffd166;
+}
+
+/* ---------- Global text & layout ---------- */
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 16px;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: var(--link); text-decoration: underline; }
+a:visited { color: var(--link-visited); }
+a:hover { text-decoration: none; }
+
+/* ---------- Common components ---------- */
+.panel {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  box-shadow: var(--shadow);
+}
+
+.card {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: calc(var(--radius) - 4px);
+  padding: 12px;
+  box-shadow: var(--shadow);
+}
+
+.row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.small { font-size: 0.92rem; color: var(--muted); }
+
+/* ---------- Buttons & inputs ---------- */
+button, .button, input[type="submit"] {
+  appearance: none;
+  border: 2px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+button:hover, .button:hover, input[type="submit"]:hover {
+  box-shadow: var(--shadow-strong);
+}
+
+button.primary, .primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--on-primary);
+}
+
+button.danger, .danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: var(--on-danger);
+}
+
+button:focus, .button:focus, input:focus, select:focus, textarea:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* ---------- Inputs ---------- */
+input, select, textarea {
+  background: var(--card);
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+input::placeholder, textarea::placeholder { color: #666; }
+select { padding-right: 28px; }
+
+/* ---------- Headers ---------- */
+h1, h2, h3 { line-height: 1.2; }
+h1 { font-size: 1.75rem; margin: 0 0 8px 0; }
+h2 { font-size: 1.25rem; margin: 0 0 6px 0; }
+h3 { font-size: 1.1rem; margin: 0 0 4px 0; }
+
+/* ---------- Utility ---------- */
+.hr { height: 2px; background: var(--border); border: 0; margin: 8px 0; }
+
+/* ---------- Board helpers (if using wrapped grid) ---------- */
+.boardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 12px;
+}
+.stageCol { min-width: 0; }
+.stageHeader { position: sticky; top: 0; z-index: 1; background: var(--surface); padding-bottom: 6px; margin-bottom: 6px; }
+.stageHeader h2 { margin: 0 0 4px; }
+.stageCol .cards { display: flex; flex-direction: column; gap: 8px; max-height: calc(100vh - 260px); overflow-y: auto; padding-right: 4px; }
