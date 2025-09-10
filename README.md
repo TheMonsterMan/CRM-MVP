@@ -1,4 +1,4 @@
-﻿# CRM MVP
+# CRM MVP
 
 Next.js (App Router) + Prisma + Neon Postgres.
 
