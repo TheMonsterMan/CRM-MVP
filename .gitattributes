@@ -1,0 +1,8 @@
+﻿# Normalize line endings and avoid BOMs
+* text=auto eol=lf
+
+# Keep TOML and config files clean
+*.toml text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+*.json text eol=lf
