@@ -1,7 +1,4 @@
-﻿# Normalize line endings and avoid BOMs
-* text=auto eol=lf
-
-# Keep TOML and config files clean
+﻿* text=auto eol=lf
 *.toml text eol=lf
 *.yml  text eol=lf
 *.yaml text eol=lf
