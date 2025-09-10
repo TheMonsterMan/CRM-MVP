@@ -1,8 +1,11 @@
 ## What
-- 
+-
 
 ## How to test
-- 
+-
 
-## Screenshots
+## Screenshots / Demo
+-
+
+## Notes
 -
