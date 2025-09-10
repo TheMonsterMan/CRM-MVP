@@ -1,4 +1,4 @@
-name: CI
+﻿name: CI
 on:
   pull_request:
   push:
@@ -14,5 +14,5 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npx prisma generate
-      # skip DB migrations in CI; just ensure code builds
+      # Skip DB migrations in CI; this verifies the code builds
       - run: npm run build

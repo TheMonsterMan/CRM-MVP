@@ -1,4 +1,4 @@
-# Node / Next.js
+﻿# Node / Next.js
 node_modules/
 .next/
 out/
@@ -11,7 +11,7 @@ yarn-error.log*
 .env.local
 .env.*.local
 
-# Prisma (local SQLite leftovers, if any)
+# Prisma (local sqlite leftovers, if any)
 prisma/dev.db
 prisma/dev.db-journal
 
