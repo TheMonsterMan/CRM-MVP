@@ -1,84 +1,70 @@
 'use client';
 
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import React from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 
-export function DailyHeader() {
+export default function GlanceHeader() {
   const router = useRouter();
   const pathname = usePathname();
+
+  // In some build/type combos, Next types this as URLSearchParams | null.
+  // Provide a safe fallback so TS is happy during SSR builds.
   const search = useSearchParams();
-  const date = search.get('date') || new Date().toISOString().slice(0,10);
+  const searchStr = search?.toString() ?? '';
+  const spInitial = React.useMemo(() => new URLSearchParams(searchStr), [searchStr]);
+
+  const today = new Date().toISOString().slice(0, 10);
+  const date = spInitial.get('date') ?? today;
+  const view = spInitial.get('view') ?? 'daily'; // 'daily' | 'weekly'
+
+  function setParam(key: string, value: string) {
+    const sp = new URLSearchParams(search?.toString() ?? '');
+    if (value) sp.set(key, value);
+    else sp.delete(key);
+    router.push(`${pathname}?${sp.toString()}`);
+  }
 
   function setDate(d: string) {
-    const sp = new URLSearchParams(search.toString());
-    if (d) sp.set('date', d); else sp.delete('date');
-    router.replace(`${pathname}?${sp.toString()}`);
+    setParam('date', d);
   }
 
-  function shift(days: number) {
-    const dt = new Date(date + 'T00:00:00Z');
-    dt.setUTCDate(dt.getUTCDate() + days);
-    setDate(dt.toISOString().slice(0,10));
+  function setView(v: 'daily' | 'weekly') {
+    setParam('view', v);
   }
 
   return (
-    <div className="row" style={{ alignItems:'center', gap:8, flexWrap:'wrap' }}>
-      <strong>Day:</strong>
-      <input type="date" value={date} onChange={e => setDate(e.target.value)} />
-      <button onClick={() => shift(-1)}>← Prev</button>
-      <button onClick={() => setDate(new Date().toISOString().slice(0,10))}>Today</button>
-      <button onClick={() => shift(1)}>Next →</button>
-    </div>
-  );
-}
+    <div className="panel" style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+      <strong>Glance</strong>
 
-export function WeeklyHeader() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const search = useSearchParams();
+      <div className="spacer" />
 
-  const start = search.get('start') || (() => {
-    const now = new Date();
-    const day = now.getUTCDay(); // 0 Sun..6 Sat
-    const diff = (day + 6) % 7; // days since Monday
-    now.setUTCHours(0,0,0,0);
-    now.setUTCDate(now.getUTCDate() - diff);
-    return now.toISOString().slice(0,10);
-  })();
+      <div className="button-group" role="tablist" aria-label="Glance range">
+        <button
+          className={`button ${view === 'daily' ? 'primary' : ''}`}
+          role="tab"
+          aria-selected={view === 'daily'}
+          onClick={() => setView('daily')}
+        >
+          Daily
+        </button>
+        <button
+          className={`button ${view === 'weekly' ? 'primary' : ''}`}
+          role="tab"
+          aria-selected={view === 'weekly'}
+          onClick={() => setView('weekly')}
+        >
+          Weekly
+        </button>
+      </div>
 
-  function setStart(d: string) {
-    const sp = new URLSearchParams(search.toString());
-    if (d) sp.set('start', d); else sp.delete('start');
-    router.replace(`${pathname}?${sp.toString()}`);
-  }
-
-  function shift(weeks: number) {
-    const dt = new Date(start + 'T00:00:00Z');
-    dt.setUTCDate(dt.getUTCDate() + weeks*7);
-    setStart(dt.toISOString().slice(0,10));
-  }
-
-  const end = (() => {
-    const dt = new Date(start + 'T00:00:00Z');
-    dt.setUTCDate(dt.getUTCDate() + 6);
-    return dt.toISOString().slice(0,10);
-  })();
-
-  return (
-    <div className="row" style={{ alignItems:'center', gap:8, flexWrap:'wrap' }}>
-      <strong>Week:</strong>
-      <input type="date" value={start} onChange={e => setStart(e.target.value)} title="Week start (Mon)" />
-      <span className="small">→ {end}</span>
-      <button onClick={() => shift(-1)}>← Prev</button>
-      <button onClick={() => setStart((() => {
-        const now = new Date();
-        const day = now.getUTCDay();
-        const diff = (day + 6) % 7;
-        now.setUTCHours(0,0,0,0);
-        now.setUTCDate(now.getUTCDate() - diff);
-        return now.toISOString().slice(0,10);
-      })())}>This Week</button>
-      <button onClick={() => shift(1)}>Next →</button>
+      <input
+        type="date"
+        value={date}
+        onChange={(e) => setDate(e.currentTarget.value || today)}
+        className="input"
+        style={{ marginLeft: 8 }}
+        aria-label="Choose date"
+      />
     </div>
   );
 }
