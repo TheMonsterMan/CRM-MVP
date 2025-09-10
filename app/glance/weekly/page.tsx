@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import React from 'react';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import { WeeklyHeader } from '@/app/components/GlanceHeader';
+import GlanceHeader from '@/app/components/GlanceHeader';
 
 type SP = Record<string, string | undefined>;
 
@@ -65,7 +65,7 @@ export default async function WeeklyGlance({ searchParams }: { searchParams?: SP
     <main>
       <h1>Weekly Glance</h1>
       <div className="panel" style={{ marginBottom: 12 }}>
-        <WeeklyHeader />
+        <GlanceHeader />
         <div className="small" style={{ color:'#666', marginTop: 6 }}>UTC week starting: {label}</div>
       </div>
 

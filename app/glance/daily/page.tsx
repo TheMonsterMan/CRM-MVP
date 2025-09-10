@@ -3,8 +3,7 @@ export const dynamic = 'force-dynamic';
 import React from 'react';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import { DailyHeader } from '@/app/components/GlanceHeader';
-
+import GlanceHeader from '@/app/components/GlanceHeader';
 type SP = Record<string, string | undefined>;
 
 function dayRangeUTC(dateStr?: string) {
@@ -44,7 +43,7 @@ export default async function DailyGlance({ searchParams }: { searchParams?: SP 
     <main>
       <h1>Daily Glance</h1>
       <div className="panel" style={{ marginBottom: 12 }}>
-        <DailyHeader />
+        <GlanceHeader />
         <div className="small" style={{ color:'#666', marginTop: 6 }}>UTC day: {label}</div>
       </div>
 
