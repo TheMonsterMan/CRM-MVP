@@ -1,4 +1,4 @@
-{
+﻿{
   "name": "crm-mvp",
   "version": "0.1.0",
   "private": true,
@@ -23,4 +23,4 @@
     "prisma": "^6.15.0",
     "typescript": "5.4.5"
   }
-}
+, "engines": { "node": ">=20 <21" } }

@@ -1,55 +1,28 @@
-# CRM MVP (Next.js 14 + Prisma + SQLite)
+﻿# CRM MVP
 
-A minimal, working CRM scaffold focused on **Deals → Stages (Kanban) → Activities** with a simple UI and server actions.
+Next.js (App Router) + Prisma + Neon Postgres.
 
-## Features in this MVP
-- Data model: Pipeline → Stages → Deals (+ Accounts/Contacts skeletons).
-- Server-rendered Kanban board by Stage.
-- Create a deal, move deals between stages (left/right buttons).
-- postgreSQL via NEON and Prisma; seed script creates a default pipeline & sample data.
-- No auth yet (single-tenant dev mode).
+## Getting Started
+1) Copy \.env.example\ → \.env\ and set:
+   \\\
+   DATABASE_URL="postgres://USER:PASSWORD@ep-xxxx.neon.tech/neondb?sslmode=require&pgbouncer=true"
+   \\\
+2) Install:
+   \\\
+   npm ci
+   \\\
+3) Prisma:
+   \\\
+   npx prisma generate
+   npx prisma migrate deploy   # or \
+px prisma migrate dev\ in dev
+   \\\
+4) Dev:
+   \\\
+   npm run dev
+   \\\
 
-## Quick start
-
-1) **Install dependencies**
-```bash
-npm i
-```
-
-2) **Set up the DB**
-```bash
-cp .env.example .env
-npm run prisma:generate
-npm run db:push
-npm run seed
-```
-
-3) **Run the app**
-```bash
-npm run dev
-```
-
-Visit http://localhost:3000
-
-## Project structure
-```
-app/
-  layout.tsx
-  page.tsx          # Kanban board & create-deal form
-  actions.ts        # Server actions for create/move
-lib/
-  prisma.ts         # Prisma client singleton
-prisma/
-  schema.prisma
-  seed.cjs
-```
-
-## Next steps
-- Add auth (Clerk, Auth0, or NextAuth) + orgs/roles.
-- Activities & Tasks UI (notes, calls, meetings).
-- Search & filters; saved views.
-- Audit log; soft delete.
-- Import/export CSV.
-- Email/calendar integrations (Google/Microsoft).
-
-If you want, we can extend this with Accounts/Contacts pages, activity timelines, and basic reporting.
+## Deploy (Netlify)
+- Add env var \DATABASE_URL\ in Site settings → Environment
+- Netlify reads \
+etlify.toml\ (runs Prisma generate + migrate + build)
